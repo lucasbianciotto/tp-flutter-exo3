@@ -3,7 +3,7 @@ class Breed {
   final String name;
   final String description;
 
-  Breed({required this.name, required this.description, required this.id});
+  Breed({required this.id, required this.name, required this.description});
 
   factory Breed.fromJson(Map<String, dynamic> json) {
     return Breed(
@@ -21,5 +21,21 @@ class Breed {
   @override
   bool operator ==(Object other) {
     return id == (other as Breed).id;
+  }
+
+  toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+    };
+  }
+
+  static Breed fromMap(Map<String, Object?> e) {
+    return Breed(
+      id: e['id'] as String,
+      name: e['name'] as String,
+      description: e['description'] as String,
+    );
   }
 }

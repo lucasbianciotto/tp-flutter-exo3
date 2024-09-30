@@ -1,3 +1,4 @@
+import 'package:exo3/pages/Favorite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,21 +11,21 @@ class FavoriteBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Consumer<FavoritesRepository>(
-        builder: (context, value, child) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('${value.getFavoriteIds().length}'),
-              const Icon(
-                Icons.favorite,
-                color: Colors.red,
-              ),
-            ],
-          );
-        },
-      ),
+    return Consumer<FavoritesRepository>(
+      builder: (context, value, child) {
+        return ElevatedButton.icon(
+            icon: const Icon(Icons.favorite),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              iconColor: Colors.red,
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritePage()));
+            },
+            label: Text(value.getFavoriteIds().length.toString()),
+        );
+      },
     );
   }
 

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:exo3/services/catapi.dart';
 import 'package:exo3/widgets/FavoriteButton.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/breed.dart';
 import '../models/image.dart' as image;
@@ -41,15 +44,19 @@ class _BreedPageState extends State<BreedPage> {
       body: Column(
         children: [
           SizedBox(
-            height: 350,
+            height: 400,
             child: FutureBuilder(
               future: images,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return CarouselView(
-                    itemExtent: 400,
-                    shrinkExtent: 400,
+                    itemExtent: 390,
+                    shrinkExtent: 350,
                     itemSnapping: true,
+                    scrollDirection: Axis.horizontal,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
                     children: snapshot.data!.map((image) {
                       return Image.network(
                         image.url,
@@ -68,9 +75,9 @@ class _BreedPageState extends State<BreedPage> {
             ),
           ),
           ListTile(
-            title: Text(widget.breed.name),
+            title: const Text("Description"),
             subtitle: Text(widget.breed.description),
-          )
+          ),
         ],
       ),
     );

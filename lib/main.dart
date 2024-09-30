@@ -1,3 +1,4 @@
+import 'package:exo3/database/CatsDatabase.dart';
 import 'package:exo3/pages/Breed.dart';
 import 'package:exo3/pages/Favorite.dart';
 import 'package:exo3/repositories/FavoritesRepository.dart';
@@ -9,7 +10,10 @@ import 'package:provider/provider.dart';
 
 import 'models/breed.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CatsDatabase().open();
+
   runApp(ChangeNotifierProvider(
     create: (context) => FavoritesRepository(),
     child: const MyApp(),
@@ -71,6 +75,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemBuilder: (context, index) {
                       final breed = snapshot.data?[index];
                       return GestureDetector(
+                        onDoubleTap: () {
+                          final favorites = Provider.of<FavoritesRepository>(context, listen: false);
+                          favorites.isFavorite(breed) ? favorites.remove(breed) : favorites.add(breed);
+                          // make heart animation
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(favorites.isFavorite(breed) ? 'Added to favorites' : 'Removed from favorites'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+
+                        },
                         onTap: () {
                           Navigator.push(
                             context,
@@ -97,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(breed!.name),
+                                    Text(breed.name),
                                     FavoriteButton(breed: breed)
                                   ],
                                 )
@@ -121,17 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const FavoritePage(),
-            ),
-          );
-        },
-        child: const FavoriteBar()
-      ),
+      floatingActionButton: const FavoriteBar(),
     );
   }
 }
